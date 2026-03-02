@@ -1,0 +1,210 @@
+ 
+Generate Parentheses
+
+Concept: Backtracking / Recursion
+Example:
+Input: n = 3
+Output:
+["((()))","(()())","(())()","()(())","()()()"]
+
+
+def generateParenthesis(n):
+    result = []
+
+    def backtrack(curr, open_count, close_count):
+        # Base case
+        if len(curr) == 2 * n:
+            result.append(curr)
+            return
+        
+        # Add '(' if allowed
+        if open_count < n:
+            backtrack(curr + "(", open_count + 1, close_count)
+        
+        # Add ')' if allowed
+        if close_count < open_count:
+            backtrack(curr + ")", open_count, close_count + 1)
+    
+    backtrack("", 0, 0)
+    return result
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Explain
+
+
+## 🎯 Generate Parentheses – Backtracking Explanation
+
+### 🧠 Problem Understanding
+
+Given `n` pairs of parentheses, generate **all valid combinations**.
+
+Example:
+Input: `n = 3`
+Output:
+
+```
+["((()))","(()())","(())()","()(())","()()()"]
+```
+
+We must generate only **balanced** parentheses.
+
+---
+
+## 🔥 Core Concept: Backtracking (Recursion)
+
+Backtracking means:
+
+> Try all possible choices → If invalid, stop early → If valid, continue building → If complete, store result.
+
+Here we:
+
+* Add `'('` if we still can.
+* Add `')'` only if it won’t make the string invalid.
+
+---
+
+## 🧩 Important Rules
+
+For a valid parentheses string:
+
+1. Total `'('` ≤ `n`
+2. Total `')'` ≤ total `'('`
+3. Final length must be `2 * n`
+
+---
+
+## 📘 Code Walkthrough
+
+```python
+def generateParenthesis(n):
+    result = []
+
+    def backtrack(curr, open_count, close_count):
+```
+
+We define:
+
+* `curr` → current string being built
+* `open_count` → number of '(' used
+* `close_count` → number of ')' used
+
+---
+
+### ✅ Base Case
+
+```python
+if len(curr) == 2 * n:
+    result.append(curr)
+    return
+```
+
+When string length reaches `2*n`, it's complete → store it.
+
+---
+
+### ➕ Add '('
+
+```python
+if open_count < n:
+    backtrack(curr + "(", open_count + 1, close_count)
+```
+
+We can add `'('` only if we haven’t used all `n`.
+
+---
+
+### ➖ Add ')'
+
+```python
+if close_count < open_count:
+    backtrack(curr + ")", open_count, close_count + 1)
+```
+
+We add `')'` only if:
+
+```
+close_count < open_count
+```
+
+This ensures the string never becomes invalid.
+
+Example of invalid:
+
+```
+")("
+```
+
+Because closing before opening is not allowed.
+
+---
+
+## 🌳 Recursion Tree Idea (For n = 3)
+
+Start:
+
+```
+""
+```
+
+Then:
+
+```
+(
+((
+(((
+((()
+((())
+((()))
+```
+
+Backtrack and try other possibilities:
+
+```
+(()())
+(())()
+()(())
+()()()
+```
+
+Backtracking automatically explores all valid branches.
+
+---
+
+## ⏱ Time & Space Complexity
+
+### ⏱ Time Complexity:
+
+Number of valid combinations = **Catalan Number**
+
+For n:
+
+```
+C(n) = (1/(n+1)) * (2n choose n)
+```
+
+Approx:
+
+```
+O(4^n / √n)
+```
+
+Because we generate all valid combinations.
+
+---
+
+### 💾 Space Complexity:
+
+* Recursion stack → O(n)
+* Output storage → O(4^n / √n)
+
+---
+
+## 🎤 Interview Short Oral Answer (4–5 lines)
+
+> We use backtracking to generate all valid parentheses.
+> We add '(' if open_count < n.
+> We add ')' only if close_count < open_count to maintain validity.
+> When length becomes 2*n, we store the string.
+> Time complexity is based on Catalan number ≈ O(4^n / √n).
+
+
