@@ -17,3 +17,117 @@ def backspaceCompare(s: str, t: str) -> bool:
         return "".join(stack)
 
     return build(s) == build(t)
+
+
+### 1️⃣ Backspace String Compare
+
+**Problem:**
+Given two strings `s` and `t`, `#` represents a backspace.
+Return `True` if both strings are equal after applying backspaces.
+
+---
+
+### 🔎 Example
+
+**Input:**
+`s = "ab#c"`
+`t = "ad#c"`
+
+**Process:**
+
+For `"ab#c"`
+
+* a → "a"
+* b → "ab"
+* # → remove b → "a"
+* c → "ac"
+
+Final = `"ac"`
+
+For `"ad#c"`
+
+* a → "a"
+* d → "ad"
+* # → remove d → "a"
+* c → "ac"
+
+Final = `"ac"`
+
+✅ Both become `"ac"` → **Output: True**
+
+---
+
+## 💡 Concept Used: Stack
+
+A **stack** works on **LIFO (Last In First Out)**.
+
+* When we see a normal character → `push` into stack
+* When we see `#` → `pop` last character (if stack not empty)
+
+---
+
+## 🧠 Code Explanation
+
+```python
+def backspaceCompare(s: str, t: str) -> bool:
+    def build(string):
+        stack = []
+        for ch in string:
+            if ch == '#':
+                if stack:
+                    stack.pop()
+            else:
+                stack.append(ch)
+        return "".join(stack)
+
+    return build(s) == build(t)
+```
+
+### Step-by-step:
+
+### 1️⃣ `build(string)` function
+
+* Creates an empty stack.
+* Iterates through each character.
+* If character is `#` → remove last element.
+* Else → add character.
+* Finally → convert stack to string and return.
+
+### 2️⃣ Final Comparison
+
+```python
+return build(s) == build(t)
+```
+
+* Build both processed strings.
+* Compare them.
+* Return True or False.
+
+---
+
+## ⏱ Time & Space Complexity
+
+### ⏳ Time Complexity: **O(n + m)**
+
+* We traverse both strings once.
+* `n = len(s)`
+* `m = len(t)`
+
+### 📦 Space Complexity: **O(n + m)**
+
+* Stack may store entire string (if no `#`).
+
+---
+
+## 🚀 Optimization (Two Pointer – O(1) Space)
+
+Instead of building new strings, we can:
+
+* Traverse from **right to left**
+* Count backspaces
+* Skip characters accordingly
+
+This reduces space to **O(1)**.
+
+If you want, I can explain the optimized two-pointer approach step by step for interview revision 🎯
+
