@@ -1,0 +1,187 @@
+ 
+
+Concept: Sliding Window / HashSet
+Example:
+Input: "abcabcbb"
+Output: 3
+
+def lengthOfLongestSubstring(s: str) -> int:
+    char_set = set()
+    left = 0
+    max_len = 0
+
+    for right in range(len(s)):
+        while s[right] in char_set:
+            char_set.remove(s[left])
+            left += 1
+        char_set.add(s[right])
+        max_len = max(max_len, right - left + 1)
+
+    return max_len
+
+Explain
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+### 4️⃣ Longest Substring Without Repeating Characters
+
+**Problem:**
+Given a string, find the length of the longest substring without repeating characters.
+
+Example:
+Input: `"abcabcbb"`
+Output: `3`
+Longest substring = `"abc"`
+
+---
+
+## 🔹 Core Concept: Sliding Window + HashSet
+
+We use:
+
+* **Two pointers** → `left` and `right` (Sliding Window)
+* **Set (`char_set`)** → to store unique characters in current window
+
+The window always maintains **unique characters only**.
+
+---
+
+## 🔹 How Sliding Window Works
+
+Think of it like a moving window:
+
+```
+left → starting index
+right → ending index
+```
+
+We expand the window using `right`.
+If we find a duplicate, we shrink the window from `left`.
+
+---
+
+## 🔹 Step-by-Step Example
+
+Input: `"abcabcbb"`
+
+| Step                 | Window                           | char_set | max_len |
+| -------------------- | -------------------------------- | -------- | ------- |
+| a                    | "a"                              | {a}      | 1       |
+| b                    | "ab"                             | {a,b}    | 2       |
+| c                    | "abc"                            | {a,b,c}  | 3       |
+| a ❌                  | duplicate → remove 'a' from left |          |         |
+| window becomes "bca" | {b,c,a}                          | 3        |         |
+| continue...          |                                  |          |         |
+
+Final Answer = **3**
+
+---
+
+## 🔹 Code Explanation Line by Line
+
+```python
+def lengthOfLongestSubstring(s: str) -> int:
+```
+
+Function definition.
+
+```python
+    char_set = set()
+```
+
+Stores unique characters in current window.
+
+```python
+    left = 0
+```
+
+Left pointer (start of window).
+
+```python
+    max_len = 0
+```
+
+Stores maximum length found.
+
+---
+
+### Main Loop
+
+```python
+    for right in range(len(s)):
+```
+
+Move `right` pointer step by step.
+
+---
+
+### If Duplicate Found
+
+```python
+        while s[right] in char_set:
+```
+
+If current character already exists → duplicate.
+
+```python
+            char_set.remove(s[left])
+            left += 1
+```
+
+Shrink window from left until duplicate is removed.
+
+---
+
+### Add Character
+
+```python
+        char_set.add(s[right])
+```
+
+Add current character to set.
+
+---
+
+### Update Maximum Length
+
+```python
+        max_len = max(max_len, right - left + 1)
+```
+
+Window size = `right - left + 1`
+
+---
+
+### Return Result
+
+```python
+    return max_len
+```
+
+---
+
+## 🔹 Why It Works
+
+* Each character is added **once**
+* Each character is removed **once**
+* Window always contains **unique characters**
+* We check all possible substrings efficiently
+
+---
+
+## 🔹 Time & Space Complexity
+
+### ⏱ Time Complexity: **O(n)**
+
+* Each character is visited at most twice (once by right, once by left).
+
+### 📦 Space Complexity: **O(min(n, m))**
+
+* `m` = size of character set (e.g., 26 for lowercase letters)
+* In worst case → O(n)
+
+---
+
+## 🎯 Interview Quick 4-Line Answer
+
+"This problem uses a sliding window with two pointers. We expand the window using the right pointer and store characters in a set. If we find a duplicate, we shrink the window from the left until it becomes unique again. Time complexity is O(n) because each character is processed at most twice."
+
