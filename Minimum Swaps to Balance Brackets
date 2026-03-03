@@ -1,0 +1,195 @@
+Minimum Swaps to Balance Brackets
+
+Concept: Greedy / Counting imbalance
+Example:
+Input: "][]["
+Output: 1
+
+def minSwaps(s: str) -> int:
+    imbalance = 0
+    open_count = 0
+
+    for char in s:
+        if char == '[':
+            open_count += 1
+        else:
+            if open_count > 0:
+                open_count -= 1
+            else:
+                imbalance += 1
+
+    return (imbalance + 1) // 2
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+explain and breakdown
+
+
+## 1️⃣4️⃣ Minimum Swaps to Balance Brackets
+
+### 🔎 Problem Understanding
+
+You are given a string containing only:
+
+* `'['` → opening bracket
+* `']'` → closing bracket
+
+You must return the **minimum number of swaps** required to make the string balanced.
+
+A string is **balanced** when:
+
+* Every `[` has a matching `]`
+* At no point while scanning left to right do we get more `]` than `[`
+
+---
+
+### 🧠 Core Concept: Greedy + Counting Imbalance
+
+We scan the string **left to right**.
+
+We track:
+
+* `open_count` → number of unmatched `'['`
+* `imbalance` → number of unmatched `']'`
+
+---
+
+### 🧪 Example
+
+Input:
+
+```
+"][]["
+```
+
+Step-by-step:
+
+| Character | open_count | imbalance | Explanation                 |
+| --------- | ---------- | --------- | --------------------------- |
+| `]`       | 0          | 1         | No `[` to match → imbalance |
+| `[`       | 1          | 1         | Found opening bracket       |
+| `]`       | 0          | 1         | Matched with previous `[`   |
+| `[`       | 1          | 1         | Opening bracket             |
+
+Final:
+
+```
+imbalance = 1
+```
+
+Minimum swaps:
+
+```
+(imbalance + 1) // 2
+= (1 + 1) // 2
+= 1
+```
+
+✔ Output = **1**
+
+---
+
+### 💡 Why Divide by 2?
+
+Each swap can fix **two imbalanced brackets**.
+
+Example pattern:
+
+```
+"]][["
+```
+
+Two `]` are misplaced.
+Swapping one `]` with one `[` can fix both sides.
+
+So:
+
+```
+swaps = ceil(imbalance / 2)
+```
+
+Which is written as:
+
+```python
+(imbalance + 1) // 2
+```
+
+This is a common trick to calculate ceiling in integers.
+
+---
+
+### 🧾 Code Breakdown
+
+```python
+def minSwaps(s: str) -> int:
+    imbalance = 0
+    open_count = 0
+```
+
+* `imbalance` → counts unmatched closing brackets
+* `open_count` → tracks available opening brackets
+
+---
+
+```python
+    for char in s:
+```
+
+Loop through each character.
+
+---
+
+```python
+        if char == '[':
+            open_count += 1
+```
+
+If opening bracket → increase available openings.
+
+---
+
+```python
+        else:
+            if open_count > 0:
+                open_count -= 1
+```
+
+If closing bracket:
+
+* If an opening bracket exists → match them.
+
+---
+
+```python
+            else:
+                imbalance += 1
+```
+
+If no opening bracket available → unmatched `]` → increase imbalance.
+
+---
+
+```python
+    return (imbalance + 1) // 2
+```
+
+Return minimum swaps needed.
+
+---
+
+## ⏱ Time & Space Complexity
+
+| Complexity | Value                    |
+| ---------- | ------------------------ |
+| Time       | O(n) — single pass       |
+| Space      | O(1) — only two counters |
+
+---
+
+## 🎯 Interview Short Answer Version (Oral)
+
+* We count unmatched closing brackets.
+* Each swap can fix two imbalances.
+* So minimum swaps = ceil(imbalance / 2).
+* Time complexity O(n), space O(1).
+
