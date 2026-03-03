@@ -1,0 +1,181 @@
+8️⃣ Spiral Matrix
+
+Concept: Matrix Traversal / Simulation
+Example:
+Input:
+
+[[1,2,3],
+ [4,5,6],
+ [7,8,9]]
+
+Output:
+[1,2,3,6,9,8,7,4,5]
+
+
+8️⃣ Spiral Matrix
+
+Concept: Matrix Traversal / Simulation
+Example:
+Input:
+
+[[1,2,3],
+ [4,5,6],
+ [7,8,9]]
+
+Output:
+[1,2,3,6,9,8,7,4,5]
+
+explain 
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+## 8️⃣ Spiral Matrix
+
+### 🔹 Concept: **Matrix Traversal / Simulation**
+
+In this problem, we need to traverse a 2D matrix in a **spiral order** (clockwise).
+
+Given:
+
+```
+[
+ [1, 2, 3],
+ [4, 5, 6],
+ [7, 8, 9]
+]
+```
+
+We move like this:
+
+➡ Right → ⬇ Down → ⬅ Left → ⬆ Up
+And repeat until all elements are visited.
+
+---
+
+## 🔹 Step-by-Step Approach
+
+We use **4 boundaries**:
+
+* `top` → starting row
+* `bottom` → ending row
+* `left` → starting column
+* `right` → ending column
+
+Initially:
+
+```
+top = 0
+bottom = 2
+left = 0
+right = 2
+```
+
+---
+
+### ✅ Step 1: Move Right (Top Row)
+
+Take elements from `left → right`
+
+```
+[1, 2, 3]
+```
+
+Then move boundary:
+
+```
+top++
+```
+
+---
+
+### ✅ Step 2: Move Down (Right Column)
+
+Take elements from `top → bottom`
+
+```
+6, 9
+```
+
+Then:
+
+```
+right--
+```
+
+---
+
+### ✅ Step 3: Move Left (Bottom Row)
+
+Take elements from `right → left`
+
+```
+8, 7
+```
+
+Then:
+
+```
+bottom--
+```
+
+---
+
+### ✅ Step 4: Move Up (Left Column)
+
+Take elements from `bottom → top`
+
+```
+4
+```
+
+Then:
+
+```
+left++
+```
+
+---
+
+### 🔁 Repeat until boundaries cross
+
+Finally, we add:
+
+```
+5
+```
+
+---
+
+## ✅ Final Output
+
+```
+[1,2,3,6,9,8,7,4,5]
+```
+
+---
+
+# 💡 Why This Works
+
+We shrink the boundaries after completing one full outer layer.
+
+Think of it as peeling an onion layer by layer 🧅
+
+---
+
+## ⏱ Time & Space Complexity
+
+* **Time Complexity:** `O(m × n)`
+  (Every element is visited once)
+
+* **Space Complexity:** `O(1)` (excluding output array)
+  We only use boundary variables.
+
+---
+
+# 🧠 Interview Short Oral Answer (4–5 lines)
+
+> We maintain four boundaries: top, bottom, left, right.
+> Traverse right, down, left, and up while shrinking boundaries after each direction.
+> Continue until boundaries cross.
+> Time complexity is O(m*n) because each element is visited once.
+
