@@ -1,0 +1,469 @@
+1️⃣1️⃣ Minimum Window Substring
+
+Concept: Sliding Window + Frequency Map
+Example:
+Input: "ADOBECODEBANC", "ABC"
+Output: "BANC"
+
+from collections import Counter
+
+def minWindow(s: str, t: str) -> str:
+    if not t:
+        return ""
+
+    need = Counter(t)
+    window = {}
+    have, need_count = 0, len(need)
+    res = [-1, -1]
+    res_len = float("inf")
+    left = 0
+
+    for right in range(len(s)):
+        char = s[right]
+        window[char] = window.get(char, 0) + 1
+
+        if char in need and window[char] == need[char]:
+            have += 1
+
+        while have == need_count:
+            if (right - left + 1) < res_len:
+                res = [left, right]
+                res_len = right - left + 1
+
+            window[s[left]] -= 1
+            if s[left] in need and window[s[left]] < need[s[left]]:
+                have -= 1
+            left += 1
+
+    l, r = res
+    return s[l:r+1] if res_len != float("inf") else ""
+
+++++++++++++++++++++++++++++++++++++++++++++++
+## 1️⃣1️⃣ Minimum Window Substring
+
+**Concept: Sliding Window + Frequency Map**
+
+**Problem:**
+Given two strings `s` and `t`, return the **smallest substring of `s`** that contains all characters of `t` (including duplicates).
+
+**Example:**
+Input:
+`s = "ADOBECODEBANC"`
+`t = "ABC"`
+
+Output: `"BANC"`
+
+---
+
+# 🧠 Core Idea
+
+We use:
+
+1. **Frequency Map (`need`)** → To know how many times each character is required.
+2. **Sliding Window (`left`, `right`)** → To expand and shrink substring dynamically.
+3. **Two Counters:**
+
+   * `have` → how many characters currently satisfied
+   * `need_count` → total unique characters needed
+
+---
+
+# 🔎 Step-by-Step Code Breakdown
+
+```python
+from collections import Counter
+```
+
+`Counter(t)` creates a frequency map of string `t`.
+
+Example:
+
+```
+t = "ABC"
+need = {'A':1, 'B':1, 'C':1}
+```
+
+---
+
+## 1️⃣ Edge Case
+
+```python
+if not t:
+    return ""
+```
+
+If `t` is empty → no window needed.
+
+---
+
+## 2️⃣ Initialize Variables
+
+```python
+need = Counter(t)
+window = {}
+have, need_count = 0, len(need)
+res = [-1, -1]
+res_len = float("inf")
+left = 0
+```
+
+### Explanation:
+
+| Variable     | Meaning                           |
+| ------------ | --------------------------------- |
+| `need`       | Required frequency map            |
+| `window`     | Current window frequency map      |
+| `have`       | How many characters matched fully |
+| `need_count` | Total unique characters required  |
+| `res`        | Stores best window indices        |
+| `res_len`    | Stores minimum length             |
+| `left`       | Left pointer                      |
+
+---
+
+# 🚶 Main Loop (Expand Window)
+
+```python
+for right in range(len(s)):
+```
+
+Move `right` pointer from left to right.
+
+---
+
+## Add character to window
+
+```python
+char = s[right]
+window[char] = window.get(char, 0) + 1
+```
+
+We increase frequency in window.
+
+---
+
+## Check if requirement satisfied
+
+```python
+if char in need and window[char] == need[char]:
+    have += 1
+```
+
+If current character frequency matches required frequency → increase `have`.
+
+Example:
+
+```
+need = {'A':1, 'B':1, 'C':1}
+window = {'A':1} → have = 1
+```
+
+---
+
+# 🔁 Shrink Window (Very Important Part)
+
+```python
+while have == need_count:
+```
+
+This means:
+
+✔ All required characters are present
+Now we try to minimize the window.
+
+---
+
+## Update Result
+
+```python
+if (right - left + 1) < res_len:
+    res = [left, right]
+    res_len = right - left + 1
+```
+
+Store smaller valid window.
+
+---
+
+## Remove left character
+
+```python
+window[s[left]] -= 1
+```
+
+Reduce frequency.
+
+---
+
+## Check if window became invalid
+
+```python
+if s[left] in need and window[s[left]] < need[s[left]]:
+    have -= 1
+```
+
+If removing breaks requirement → decrease `have`.
+
+---
+
+## Move left pointer
+
+```python
+left += 1
+```
+
+Continue shrinking.
+
+---
+
+# 🎯 Final Return
+
+```python
+l, r = res
+return s[l:r+1] if res_len != float("inf") else ""
+```
+
+If we found a valid window → return substring
+Else → return empty string.
+
+---
+
+# 📊 Dry Run on Example
+
+`s = "ADOBECODEBANC"`
+`t = "ABC"`
+
+Process:
+
+1. Expand until window contains A, B, C
+   → `"ADOBEC"`
+
+2. Try shrinking
+   → Still valid → continue
+
+3. Eventually get smaller window
+   → `"BANC"`
+
+That becomes minimum.
+
+---
+
+# ⏱ Time Complexity
+
+### **O(n)**
+
+Why?
+
+* `right` pointer moves once → O(n)
+* `left` pointer moves once → O(n)
+* Total = O(2n) → O(n)
+
+---
+
+# 📦 Space Complexity
+
+### **O(m)**
+
+Where `m` = number of unique characters in `t`.
+
+We store:
+
+* `need` map
+* `window` map
+
+---
+
+# 🗣 Interview Short Answer Version (Oral – 4 lines)
+
+> We use sliding window with two pointers.
+> A frequency map tracks required characters.
+> Expand right pointer to satisfy requirement, then shrink left pointer to minimize window.
+> Time complexity is O(n) because each pointer moves once.
+
+-------------------------------------------------------------------------
+
+Perfect 🔥 Let’s visually understand **Minimum Window Substring** step-by-step.
+
+Example:
+`s = "ADOBECODEBANC"`
+`t = "ABC"`
+
+We need smallest substring containing **A, B, C**
+
+---
+
+# 🧠 Step 1: Build Requirement Map
+
+```
+need = { A:1, B:1, C:1 }
+need_count = 3
+```
+
+We must fully satisfy 3 characters.
+
+---
+
+# 🪟 Step 2: Sliding Window Movement (Visual Timeline)
+
+String with indices:
+
+```
+Index:  0 1 2 3 4 5 6 7 8 9 10 11 12
+        A D O B E C O D E B  A  N  C
+```
+
+---
+
+# 🚀 Phase 1 — Expanding Right Pointer
+
+### Right = 0 → 'A'
+
+```
+Window: [A]
+have = 1 (A satisfied)
+```
+
+---
+
+### Right = 3 → 'B'
+
+```
+Window: [A D O B]
+have = 2 (A, B satisfied)
+```
+
+---
+
+### Right = 5 → 'C'
+
+```
+Window: [A D O B E C]
+have = 3 ✅ (A, B, C satisfied)
+```
+
+Now condition met → start shrinking.
+
+---
+
+# 🔁 Phase 2 — Shrinking Left Pointer
+
+Current window:
+
+```
+[A D O B E C]
+ 0         5
+```
+
+Length = 6
+
+Try removing left:
+
+---
+
+### Remove 'A'
+
+Window becomes:
+
+```
+[D O B E C]
+```
+
+Now A missing → ❌ invalid
+Stop shrinking.
+
+---
+
+# 🚀 Continue Expanding
+
+Move right pointer further.
+
+Eventually reach:
+
+### Right = 10 → 'A'
+
+Window becomes:
+
+```
+[D O B E C O D E B A]
+```
+
+Now again have = 3 ✅
+
+Shrink again:
+
+Remove useless characters from left.
+
+---
+
+# 🔥 Important Shrinking Moment
+
+After shrinking properly:
+
+```
+[B A N C]
+ 9     12
+```
+
+This window contains:
+A = 1
+B = 1
+C = 1
+
+Length = 4 (smallest so far)
+
+---
+
+# 🎯 Final Answer
+
+```
+"BANC"
+```
+
+---
+
+# 🧩 Why Sliding Window Works
+
+Think of it like:
+
+```
+Expand → until valid
+Shrink → until invalid
+Repeat
+```
+
+This guarantees:
+
+* Every character visited once by right pointer
+* Every character removed once by left pointer
+
+That’s why time complexity is:
+
+👉 **O(n)**
+
+---
+
+# 🖼 Full Visual Flow Summary
+
+```
+Expand ➜ ADOBEC       ✅ valid
+Shrink ➜ DOBEC        ❌ invalid
+
+Expand ➜ DOBECODEBA   ✅ valid
+Shrink ➜ BANC         ✅ smaller valid
+
+Shrink more ➜ ANC     ❌ invalid
+```
+
+Smallest valid = **BANC**
+
+---
+
+# 🎤 Interview Explanation in 20 Seconds
+
+> We expand the window until all required characters are matched.
+> Once valid, we shrink from the left to remove unnecessary characters.
+> We keep updating the minimum window during valid states.
+> This guarantees O(n) time because both pointers move at most n times.
+
+
+
