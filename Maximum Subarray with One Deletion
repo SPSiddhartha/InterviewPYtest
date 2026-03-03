@@ -1,0 +1,269 @@
+
+Concept: Dynamic Programming (Forward + Backward)
+Example:
+Input: [1,-2,0,3]
+Output: 4
+
+def maximumSum(arr):
+    n = len(arr)
+    forward = arr[:]
+    backward = arr[:]
+
+    for i in range(1, n):
+        forward[i] = max(arr[i], forward[i-1] + arr[i])
+
+    for i in range(n-2, -1, -1):
+        backward[i] = max(arr[i], backward[i+1] + arr[i])
+
+    result = max(forward)
+    for i in range(1, n-1):
+        result = max(result, forward[i-1] + backward[i+1])
+
+    return result
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+explain and breakdown
+
+### ✅ 1️⃣3️⃣ Maximum Subarray with One Deletion
+
+**Concept:** Dynamic Programming (Forward + Backward Kadane)
+
+---
+
+## 🔎 Problem Understanding
+
+You are given an array.
+You can:
+
+* Take a normal subarray (like classic Kadane’s problem)
+* OR delete **at most one element** from a subarray to maximize the sum
+
+👉 You must return the **maximum possible subarray sum** after deleting at most one element.
+
+---
+
+## 📌 Example
+
+**Input:**
+
+```
+[1, -2, 0, 3]
+```
+
+If we delete `-2`, array becomes:
+
+```
+[1, 0, 3]
+```
+
+Maximum subarray = `1 + 0 + 3 = 4`
+
+✅ **Output = 4**
+
+---
+
+# 🧠 Core Idea
+
+This is an extension of **Kadane’s Algorithm**.
+
+We calculate:
+
+* `forward[i]` → max subarray sum ending at index `i`
+* `backward[i]` → max subarray sum starting at index `i`
+
+Then we try deleting each element and combine:
+
+```
+forward[i-1] + backward[i+1]
+```
+
+That means:
+👉 Take best sum before `i`
+👉 Take best sum after `i`
+👉 Skip `i`
+
+---
+
+# 🧩 Code Breakdown Line by Line
+
+```python
+def maximumSum(arr):
+```
+
+Function definition.
+
+---
+
+```python
+    n = len(arr)
+```
+
+Store array length.
+
+---
+
+```python
+    forward = arr[:]
+    backward = arr[:]
+```
+
+Create two copies of array:
+
+* `forward` → for left-to-right Kadane
+* `backward` → for right-to-left Kadane
+
+---
+
+## 🔵 Step 1: Forward Pass (Normal Kadane)
+
+```python
+    for i in range(1, n):
+        forward[i] = max(arr[i], forward[i-1] + arr[i])
+```
+
+Meaning:
+At each index, decide:
+
+* Start new subarray from `arr[i]`
+* OR extend previous subarray
+
+Formula:
+
+```
+forward[i] = max(current element,
+                 previous sum + current element)
+```
+
+For `[1,-2,0,3]`:
+
+| i | forward |
+| - | ------- |
+| 0 | 1       |
+| 1 | -1      |
+| 2 | 0       |
+| 3 | 3       |
+
+---
+
+## 🔵 Step 2: Backward Pass (Reverse Kadane)
+
+```python
+    for i in range(n-2, -1, -1):
+        backward[i] = max(arr[i], backward[i+1] + arr[i])
+```
+
+Same logic but from right to left.
+
+For `[1,-2,0,3]`:
+
+| i | backward |
+| - | -------- |
+| 3 | 3        |
+| 2 | 3        |
+| 1 | 1        |
+| 0 | 2        |
+
+---
+
+## 🔵 Step 3: Case 1 — No Deletion
+
+```python
+    result = max(forward)
+```
+
+This handles:
+👉 Normal maximum subarray without deletion.
+
+For example:
+
+```
+max(forward) = 3
+```
+
+---
+
+## 🔵 Step 4: Case 2 — Try Deleting Each Element
+
+```python
+    for i in range(1, n-1):
+        result = max(result, forward[i-1] + backward[i+1])
+```
+
+At each index `i`:
+
+We remove element `arr[i]`
+
+Then combine:
+
+```
+best sum before i
++
+best sum after i
+```
+
+For our example:
+
+Deleting index 1 (`-2`):
+
+```
+forward[0] + backward[2]
+= 1 + 3
+= 4
+```
+
+So result becomes 4.
+
+---
+
+```python
+    return result
+```
+
+Final answer.
+
+---
+
+# 🎯 Why We Need Forward + Backward?
+
+If we only used normal Kadane:
+
+* We cannot efficiently compute "what happens if we remove one element in middle".
+
+Using two arrays allows us to:
+
+* Quickly get best left sum
+* Quickly get best right sum
+* Combine in O(1)
+
+Overall complexity stays linear.
+
+---
+
+# ⏱ Time & Space Complexity
+
+### Time Complexity:
+
+* Forward pass → O(n)
+* Backward pass → O(n)
+* Deletion loop → O(n)
+
+✅ **Total = O(n)**
+
+---
+
+### Space Complexity:
+
+We use two extra arrays.
+
+✅ **O(n) space**
+
+---
+
+# 🚀 Interview Explanation (Short Oral Version)
+
+> "This is a modified Kadane problem.
+> I compute forward maximum subarray sum ending at each index and backward maximum starting at each index.
+> Then for each index, I simulate deleting that element by combining forward[i-1] and backward[i+1].
+> Finally, I return the maximum of normal Kadane and all deletion cases.
+> Time complexity O(n), space O(n)."
+
