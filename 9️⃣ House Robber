@@ -1,0 +1,175 @@
+9️⃣ House Robber
+
+Concept: Dynamic Programming
+Example:
+Input: [2,7,9,3,1]
+Output: 12
+
+def rob(nums):
+    prev, curr = 0, 0
+    for num in nums:
+        prev, curr = curr, max(curr, prev + num)
+    return curr
++++++++++++++++++++++++++++++++++++++++
+## 9️⃣ House Robber – Explained Clearly
+
+### 🧠 Problem Understanding
+
+You are a robber.
+You cannot rob **two adjacent houses** (because of security alarm).
+
+You must find the **maximum money** you can rob.
+
+Example:
+
+```
+Input:  [2,7,9,3,1]
+Output: 12
+```
+
+Why 12?
+
+Best choice:
+
+* Rob 2
+* Skip 7
+* Rob 9
+* Skip 3
+* Rob 1
+
+Total = 2 + 9 + 1 = **12**
+
+---
+
+## 🔥 Why Dynamic Programming?
+
+At every house, you have **2 choices**:
+
+1. Skip this house → keep previous maximum
+2. Rob this house → add its value to money from house before previous
+
+So at every step:
+
+```
+current_max = max(
+    skip_this_house,
+    rob_this_house
+)
+```
+
+---
+
+## 🧩 Code Explanation
+
+```python
+def rob(nums):
+    prev, curr = 0, 0
+    for num in nums:
+        prev, curr = curr, max(curr, prev + num)
+    return curr
+```
+
+---
+
+### 🪜 Step-by-Step Dry Run
+
+Input:
+
+```
+[2,7,9,3,1]
+```
+
+Initialize:
+
+```
+prev = 0
+curr = 0
+```
+
+---
+
+### 🏠 House 1 (2)
+
+```
+prev = 0
+curr = max(0, 0+2) = 2
+```
+
+Now:
+
+```
+prev = 0
+curr = 2
+```
+
+---
+
+### 🏠 House 2 (7)
+
+```
+prev = 2
+curr = max(2, 0+7) = 7
+```
+
+---
+
+### 🏠 House 3 (9)
+
+```
+prev = 7
+curr = max(7, 2+9) = 11
+```
+
+---
+
+### 🏠 House 4 (3)
+
+```
+prev = 11
+curr = max(11, 7+3) = 11
+```
+
+---
+
+### 🏠 House 5 (1)
+
+```
+prev = 11
+curr = max(11, 11+1) = 12
+```
+
+---
+
+Final Answer:
+
+```
+12
+```
+
+---
+
+## 🎯 What Do `prev` and `curr` Mean?
+
+| Variable | Meaning                  |
+| -------- | ------------------------ |
+| `prev`   | Max money till house i-2 |
+| `curr`   | Max money till house i-1 |
+
+We only store last 2 states → **Space Optimized DP**
+
+---
+
+## ⏱ Time & Space Complexity
+
+* **Time Complexity:** O(n)
+  (We traverse list once)
+
+* **Space Complexity:** O(1)
+  (Only 2 variables used)
+
+---
+
+## 🎤 Interview Explanation (Short Oral Version)
+
+"This is a dynamic programming problem. At each house, I decide whether to rob it or skip it. If I rob it, I add its value to the max from two houses before. If I skip it, I keep the previous max. I store only two variables to optimize space, so time is O(n) and space is O(1)."
+
