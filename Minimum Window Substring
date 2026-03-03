@@ -1,4 +1,4 @@
-1️⃣1️⃣ Minimum Window Substring
+Minimum Window Substring
 
 Concept: Sliding Window + Frequency Map
 Example:
@@ -39,7 +39,7 @@ def minWindow(s: str, t: str) -> str:
     return s[l:r+1] if res_len != float("inf") else ""
 
 ++++++++++++++++++++++++++++++++++++++++++++++
-## 1️⃣1️⃣ Minimum Window Substring
+Minimum Window Substring
 
 **Concept: Sliding Window + Frequency Map**
 
