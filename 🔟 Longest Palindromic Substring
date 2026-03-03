@@ -1,0 +1,221 @@
+🔟 Longest Palindromic Substring
+
+Concept: Expand Around Center / DP
+Example:
+Input: "babad"
+Output: "bab"
+
+def longestPalindrome(s: str) -> str:
+    res = ""
+    
+    for i in range(len(s)):
+        # Odd length
+        l = r = i
+        while l >= 0 and r < len(s) and s[l] == s[r]:
+            if r - l + 1 > len(res):
+                res = s[l:r+1]
+            l -= 1
+            r += 1
+
+        # Even length
+        l, r = i, i + 1
+        while l >= 0 and r < len(s) and s[l] == s[r]:
+            if r - l + 1 > len(res):
+                res = s[l:r+1]
+            l -= 1
+            r += 1
+
+    return res
+
++++++++++++++++++++++++++++++++++++++++++++++
+
+explain and breakdown
+
+
+## 🔟 Longest Palindromic Substring
+
+### 📌 Problem
+
+Given a string `s`, return the **longest substring** which is a palindrome.
+
+Example:
+Input: `"babad"`
+Output: `"bab"`
+(“aba” is also valid)
+
+---
+
+# 🧠 Core Concept: Expand Around Center
+
+A **palindrome** reads the same forward and backward.
+
+Examples:
+
+* `"aba"` ✅
+* `"abba"` ✅
+* `"abc"` ❌
+
+👉 Every palindrome expands from a **center**.
+
+There are **two types** of centers:
+
+1. **Odd length palindrome** → center is one character
+   Example: `"aba"` → center is `"b"`
+
+2. **Even length palindrome** → center is between two characters
+   Example: `"abba"` → center is between `"bb"`
+
+---
+
+# 🔎 How Algorithm Works
+
+We treat **every index** as a possible center
+Then expand left and right while characters match.
+
+---
+
+## 🔁 Code Breakdown Line by Line
+
+```python
+def longestPalindrome(s: str) -> str:
+    res = ""
+```
+
+* `res` stores the longest palindrome found so far.
+
+---
+
+```python
+for i in range(len(s)):
+```
+
+* Try every character as a center.
+
+---
+
+## 1️⃣ Odd Length Case
+
+```python
+l = r = i
+```
+
+* Start both pointers at the same index.
+
+```python
+while l >= 0 and r < len(s) and s[l] == s[r]:
+```
+
+* Expand while:
+
+  * Left pointer valid
+  * Right pointer valid
+  * Characters match
+
+```python
+if r - l + 1 > len(res):
+    res = s[l:r+1]
+```
+
+* If current substring is longer → update result.
+
+```python
+l -= 1
+r += 1
+```
+
+* Expand outward.
+
+---
+
+## 2️⃣ Even Length Case
+
+```python
+l, r = i, i + 1
+```
+
+* Center is between two characters.
+
+Same logic as above.
+
+---
+
+# 📊 Step-by-Step Example: `"babad"`
+
+Indexes:
+
+```
+0 1 2 3 4
+b a b a d
+```
+
+### i = 0 → center = 'b'
+
+* Expands → `"b"`
+
+### i = 1 → center = 'a'
+
+* Expands → `"bab"` ✅
+* Next expand fails
+
+### i = 2 → center = 'b'
+
+* Expands → `"aba"` (same length as "bab")
+
+Final answer → `"bab"`
+
+---
+
+# ⏱ Time & Space Complexity
+
+### Time Complexity:
+
+For each character (n times), we expand up to n.
+
+👉 **O(n²)**
+
+### Space Complexity:
+
+We only store result string.
+
+👉 **O(1)** (ignoring output)
+
+---
+
+# 🎯 Why This Works
+
+* Every palindrome has a center.
+* There are only `2n - 1` possible centers.
+* Expanding from center avoids checking all substrings.
+* Much better than brute force (O(n³)).
+
+---
+
+# 🧩 Alternative Method: DP (Dynamic Programming)
+
+DP uses a 2D table:
+`dp[i][j] = True` if substring from i to j is palindrome.
+
+But:
+
+* Time → O(n²)
+* Space → O(n²)
+* More memory heavy
+
+👉 Expand Around Center is cleaner and optimal for interviews.
+
+---
+
+# 💡 Interview Quick Oral Answer (4–5 lines)
+
+“Every palindrome expands from a center. For each index, I check both odd and even length palindromes by expanding left and right while characters match. I update the longest substring found. Since we expand for each character, time complexity is O(n²) and space is O(1).”
+
+---
+
+If you want, I can also explain:
+
+* 🔥 Why Manacher’s Algorithm is O(n)
+* 🔥 Dry run for even example like `"cbbd"`
+* 🔥 Convert this to Java
+* 🔥 Common interview traps
+
+Tell me what you want next 😊
