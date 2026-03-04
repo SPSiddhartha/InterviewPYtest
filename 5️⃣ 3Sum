@@ -31,3 +31,214 @@ def threeSum(nums):
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Explain
+
+## 🔹 3 Sum Problem
+
+**Question:**
+Given an integer array `nums`, return all unique triplets `[a, b, c]` such that:
+
+```
+a + b + c = 0
+```
+
+---
+
+# 1️⃣ Brute Force Approach
+
+### 💡 Idea:
+
+Try **all possible triplets** using 3 loops.
+
+### ✅ Steps:
+
+* Fix `i`
+* Fix `j`
+* Fix `k`
+* Check if `nums[i] + nums[j] + nums[k] == 0`
+* Use a set to avoid duplicates
+
+### 💻 Code:
+
+```python
+def threeSum(nums):
+    n = len(nums)
+    result = set()
+
+    for i in range(n):
+        for j in range(i+1, n):
+            for k in range(j+1, n):
+                if nums[i] + nums[j] + nums[k] == 0:
+                    triplet = tuple(sorted([nums[i], nums[j], nums[k]]))
+                    result.add(triplet)
+
+    return list(result)
+```
+
+### ⏱ Time Complexity:
+
+```
+O(n³)
+```
+
+### 📦 Space Complexity:
+
+```
+O(no_of_unique_triplets)
+```
+
+### ❌ Why not good?
+
+Very slow for large inputs.
+
+---
+
+# 2️⃣ Better Approach (Using Hashing)
+
+### 💡 Idea:
+
+Fix one element, then solve **2-Sum** using a HashSet.
+
+### ✅ Steps:
+
+* Fix `i`
+* For remaining elements:
+
+  * Use a set to check if `-(nums[i] + nums[j])` exists
+* Store sorted triplets to avoid duplicates
+
+### 💻 Code:
+
+```python
+def threeSum(nums):
+    n = len(nums)
+    result = set()
+
+    for i in range(n):
+        seen = set()
+        for j in range(i+1, n):
+            target = -nums[i] - nums[j]
+            if target in seen:
+                triplet = tuple(sorted([nums[i], nums[j], target]))
+                result.add(triplet)
+            seen.add(nums[j])
+
+    return list(result)
+```
+
+### ⏱ Time Complexity:
+
+```
+O(n²)
+```
+
+### 📦 Space Complexity:
+
+```
+O(n)
+```
+
+### ⚠ Still Issue:
+
+We still use a set for duplicates.
+
+---
+
+# 3️⃣ Optimal Approach (Two Pointer Technique) ⭐
+
+### 💡 Best & Interview Recommended
+
+### 🔥 Idea:
+
+1. Sort the array
+2. Fix one element
+3. Use two pointers to find remaining two numbers
+
+---
+
+### ✅ Steps:
+
+* Sort array
+* For each `i`
+
+  * Skip duplicates
+  * left = i+1
+  * right = n-1
+  * If sum == 0 → store
+  * If sum < 0 → move left
+  * If sum > 0 → move right
+
+---
+
+### 💻 Code:
+
+```python
+def threeSum(nums):
+    nums.sort()
+    n = len(nums)
+    result = []
+
+    for i in range(n):
+        if i > 0 and nums[i] == nums[i-1]:
+            continue
+
+        left = i + 1
+        right = n - 1
+
+        while left < right:
+            total = nums[i] + nums[left] + nums[right]
+
+            if total == 0:
+                result.append([nums[i], nums[left], nums[right]])
+
+                while left < right and nums[left] == nums[left+1]:
+                    left += 1
+                while left < right and nums[right] == nums[right-1]:
+                    right -= 1
+
+                left += 1
+                right -= 1
+
+            elif total < 0:
+                left += 1
+            else:
+                right -= 1
+
+    return result
+```
+
+---
+
+### ⏱ Time Complexity:
+
+```
+O(n²)
+```
+
+Why?
+
+* Sorting → O(n log n)
+* Outer loop → O(n)
+* Two pointer → O(n)
+
+So overall → **O(n²)**
+
+---
+
+### 📦 Space Complexity:
+
+```
+O(1)  (excluding result)
+```
+
+---
+
+# 🎯 Interview Quick Comparison
+
+| Approach            | Time  | Space | Recommended? |
+| ------------------- | ----- | ----- | ------------ |
+| Brute               | O(n³) | O(1)  | ❌ No         |
+| Better (Hashing)    | O(n²) | O(n)  | ⚠ OK         |
+| Optimal (2 Pointer) | O(n²) | O(1)  | ✅ YES        |
+
+---
+
