@@ -1,0 +1,159 @@
+Here’s **Two Sum** explained in **Brute, Better, and Optimal** ways (very common interview question 👇)
+
+---
+
+# ✅ Problem: Two Sum
+
+Given an array `nums` and an integer `target`, return **indices** of two numbers such that:
+
+```
+nums[i] + nums[j] == target
+```
+
+Example:
+
+```python
+nums = [2,7,11,15]
+target = 9
+Output: [0,1]
+```
+
+---
+
+# 1️⃣ Brute Force Approach
+
+### 💡 Idea:
+
+Check every possible pair.
+
+### 🧠 Logic:
+
+Use two loops and try all combinations.
+
+### 🧾 Code:
+
+```python
+def twoSum(nums, target):
+    n = len(nums)
+    
+    for i in range(n):
+        for j in range(i + 1, n):
+            if nums[i] + nums[j] == target:
+                return [i, j]
+```
+
+### ⏱ Time Complexity:
+
+* **O(n²)** → Two nested loops
+
+### 📦 Space Complexity:
+
+* **O(1)** → No extra space
+
+---
+
+# 2️⃣ Better Approach (Sorting + Two Pointers)
+
+### 💡 Idea:
+
+Sort the array and use two pointers.
+
+⚠ Problem: Sorting changes original indices, so we must store index along with value.
+
+### 🧾 Code:
+
+```python
+def twoSum(nums, target):
+    arr = [(num, i) for i, num in enumerate(nums)]
+    arr.sort()
+    
+    left = 0
+    right = len(arr) - 1
+    
+    while left < right:
+        total = arr[left][0] + arr[right][0]
+        
+        if total == target:
+            return [arr[left][1], arr[right][1]]
+        elif total < target:
+            left += 1
+        else:
+            right -= 1
+```
+
+### ⏱ Time Complexity:
+
+* Sorting → **O(n log n)**
+* Two pointer → **O(n)**
+* Final → **O(n log n)**
+
+### 📦 Space Complexity:
+
+* **O(n)** (for storing indices)
+
+---
+
+# 3️⃣ Optimal Approach (HashMap / Dictionary) ⭐
+
+👉 Most asked in interviews.
+
+### 💡 Idea:
+
+Store number and its index in a dictionary.
+For each number, check if:
+
+```
+complement = target - current_number
+```
+
+exists in dictionary.
+
+### 🧾 Code:
+
+```python
+def twoSum(nums, target):
+    hashmap = {}
+    
+    for i, num in enumerate(nums):
+        complement = target - num
+        
+        if complement in hashmap:
+            return [hashmap[complement], i]
+        
+        hashmap[num] = i
+```
+
+### 🧠 How it works:
+
+Example:
+
+```
+nums = [2,7,11,15]
+target = 9
+```
+
+Step 1:
+2 → complement = 7 → not in map → store {2:0}
+
+Step 2:
+7 → complement = 2 → found → return [0,1]
+
+---
+
+### ⏱ Time Complexity:
+
+* **O(n)** → single loop
+
+### 📦 Space Complexity:
+
+* **O(n)** → hashmap
+
+---
+
+# 🎯 Interview Summary (Quick Oral Answer)
+
+* Brute → Two loops → O(n²)
+* Better → Sort + two pointer → O(n log n)
+* Optimal → HashMap → O(n)
+* Best solution in interview → **HashMap**
+
