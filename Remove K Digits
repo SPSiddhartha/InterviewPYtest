@@ -196,3 +196,181 @@ Because:
 > Each digit is processed once, so time complexity is O(n).
 > After processing, we remove leading zeros and return result.
 
+------------------------------------------------------------------------------------
+
+
+## 🧮 Remove K Digits
+
+**Problem:**
+Given a numeric string `num` and an integer `k`, remove `k` digits so that the new number is the **smallest possible**.
+
+Example:
+Input: `num = "1432219", k = 3`
+Output: `"1219"`
+
+---
+
+# 1️⃣ Brute Force Approach
+
+### 💡 Idea:
+
+Generate all possible numbers by removing `k` digits and return the minimum.
+
+### 🔹 How?
+
+* Try all combinations of removing `k` digits.
+* Convert each result to integer.
+* Return smallest.
+
+### 🔹 Code (Brute)
+
+```python
+from itertools import combinations
+
+def removeKdigits(num: str, k: int) -> str:
+    if k == len(num):
+        return "0"
+
+    min_val = float('inf')
+
+    for comb in combinations(range(len(num)), k):
+        temp = list(num)
+        for i in sorted(comb, reverse=True):
+            temp.pop(i)
+        candidate = ''.join(temp).lstrip('0') or "0"
+        min_val = min(min_val, int(candidate))
+
+    return str(min_val)
+```
+
+### ⏱ Time Complexity:
+
+* O(nCk * n)
+* Extremely slow for large inputs
+
+### ❌ Not practical for interviews
+
+---
+
+# 2️⃣ Better Approach (Greedy Simulation)
+
+### 💡 Idea:
+
+If a digit is larger than next digit → remove it.
+
+Because:
+
+> Bigger digit before smaller digit increases number.
+
+### 🔹 Example:
+
+`1432219`, k=3
+
+1 > 4 (no remove)
+4 > 3 (remove 4)
+3 > 2 (remove 3)
+2 > 2 (no)
+2 > 1 (remove 2)
+
+### 🔹 Code
+
+```python
+def removeKdigits(num: str, k: int) -> str:
+    num = list(num)
+
+    while k > 0:
+        removed = False
+        for i in range(len(num) - 1):
+            if num[i] > num[i + 1]:
+                num.pop(i)
+                k -= 1
+                removed = True
+                break
+        if not removed:
+            num.pop()
+            k -= 1
+
+    result = ''.join(num).lstrip('0')
+    return result if result else "0"
+```
+
+### ⏱ Time Complexity:
+
+* O(n²)
+* Better than brute, but still slow
+
+---
+
+# 3️⃣ ✅ Optimal Approach (Monotonic Stack — Greedy)
+
+👉 This is the **interview expected solution**
+
+---
+
+## 💡 Core Logic
+
+Maintain a **monotonically increasing stack**
+
+While:
+
+* k > 0
+* stack not empty
+* top of stack > current digit
+
+→ pop from stack
+
+This ensures:
+
+> Smaller digits stay on left → number becomes minimal.
+
+---
+
+### 🔹 Code (Optimal)
+
+```python
+def removeKdigits(num: str, k: int) -> str:
+    stack = []
+
+    for digit in num:
+        while k > 0 and stack and stack[-1] > digit:
+            stack.pop()
+            k -= 1
+        stack.append(digit)
+
+    # If k still left, remove from end
+    while k > 0:
+        stack.pop()
+        k -= 1
+
+    result = ''.join(stack).lstrip('0')
+    return result if result else "0"
+```
+
+---
+
+## 🧠 Why Remove From End If k Left?
+
+Example:
+`123456`, k=2
+
+Number is already increasing → no pop happened
+So remove last 2 digits → smallest possible
+
+---
+
+## ⏱ Complexity
+
+| Approach | Time       | Space |
+| -------- | ---------- | ----- |
+| Brute    | O(nCk * n) | O(n)  |
+| Better   | O(n²)      | O(n)  |
+| Optimal  | O(n)       | O(n)  |
+
+---
+
+# 🎯 Interview Short Answer (Oral Version)
+
+"To minimize the number, we remove digits where a larger digit appears before a smaller one. We use a monotonic increasing stack. If the current digit is smaller than the top of the stack and k > 0, we pop from the stack. This ensures smaller digits stay left, producing the smallest possible number. Time complexity is O(n)."
+
+
+
