@@ -1,0 +1,269 @@
+Alright, let’s break this down into a neat Q&A format based on what Suchitra shared. I’ll also give sample answers where relevant, especially for coding/technical questions.
+
+
+---
+
+Round 1 Q&A
+
+1. Docker and Containerization (In detail)
+Q: Explain Docker and containerization.
+A:
+
+Docker is a platform to create, deploy, and run applications in containers.
+
+Containers are lightweight, isolated environments sharing the host OS kernel, unlike VMs which have full OS.
+
+Advantages: portability, faster boot time, easy scaling, and dependency isolation.
+
+Core components: Docker Engine, Dockerfile, Images, Containers, Docker Hub, Volumes, Networks.
+
+Commands: docker build, docker run, docker ps, docker stop, docker exec, docker-compose up.
+
+
+
+---
+
+2. Django Project Architecture
+Q: Explain your Django project architecture.
+A:
+
+Django follows MVC (MTV) architecture: Model (data), Template (UI), View (logic).
+
+Key components: Models, Views, Templates, URLs, Forms, Middleware, Admin interface.
+
+Database interaction via ORM.
+
+Settings for environment config, static/media files handling.
+
+Example: User authentication, REST API endpoints, admin dashboard.
+
+
+
+---
+
+3. Remove duplicates from an array
+Q: Write a Python program to remove duplicates from an array.
+A:
+
+list1 = [1,1,1,2,2,2,3,4,4,5]
+# Method 1: Using set
+unique_list = list(set(list1))
+print(unique_list)
+
+# Method 2: Preserving order
+unique_list_ordered = []
+for i in list1:
+    if i not in unique_list_ordered:
+        unique_list_ordered.append(i)
+print(unique_list_ordered)
+
+
+---
+
+4. Discuss Work Experience & Projects
+Q: Discuss your past work and projects.
+A: Be ready to describe:
+
+Your role, responsibilities.
+
+Technologies used (Python, ELK, Docker, Kubernetes, AWS).
+
+Challenges faced & solutions.
+
+Outcomes/impact.
+
+
+
+---
+
+5. AWS S3 & RDS Questions
+Q: Explain S3 and RDS.
+A:
+
+S3: Object storage, highly durable, scalable, used for files, backups, logs. Supports versioning, bucket policies.
+
+RDS: Managed relational DB (MySQL/Postgres/Oracle), handles backups, patching, scaling, high availability.
+
+
+
+---
+
+6. OS patching & Linux commands
+Q: How do you patch Linux?
+A:
+
+sudo yum update (RHEL/CentOS)
+
+sudo apt update && sudo apt upgrade (Ubuntu/Debian)
+
+Commands: systemctl status, ps -ef, top, df -h, tail -f /var/log/syslog.
+
+
+
+---
+
+7. Resume pointers
+
+They asked about every technology/project listed. Be clear on what you wrote; they check depth.
+
+
+
+---
+
+8. DMSP Tool Development Discussion
+Q: Discuss your involvement with DMSP tool.
+A: Explain: design, architecture, features, your contribution, tech stack, challenges, results.
+
+
+---
+
+9. Docker commands
+Q: Name some Docker commands.
+A: docker ps, docker images, docker build, docker run, docker exec, docker logs, docker-compose up.
+
+
+---
+
+10. Return smallest substring containing all letters
+Q: Coding question: smallest substring containing all letters.
+A: Python example using sliding window:
+
+def min_window(s, t):
+    from collections import Counter
+    t_count = Counter(t)
+    window_count = {}
+    have, need = 0, len(t_count)
+    res, res_len = [-1, -1], float("inf")
+    l = 0
+    for r in range(len(s)):
+        c = s[r]
+        window_count[c] = window_count.get(c, 0) + 1
+        if c in t_count and window_count[c] == t_count[c]:
+            have += 1
+        while have == need:
+            if (r - l + 1) < res_len:
+                res = [l, r]
+                res_len = r - l + 1
+            window_count[s[l]] -= 1
+            if s[l] in t_count and window_count[s[l]] < t_count[s[l]]:
+                have -= 1
+            l += 1
+    l, r = res
+    return s[l:r+1] if res_len != float("inf") else ""
+
+
+---
+
+11. Incident handling & repeated alerts
+Q: How do you handle incidents?
+A:
+
+Check alert details and logs.
+
+Identify root cause.
+
+Resolve or escalate.
+
+Document incident.
+
+For repeated alerts: analyze patterns, implement automated fixes, tune monitoring rules.
+
+
+
+---
+
+12. Example list & error handling
+
+list1 = [1,1,1,2,2,2,3,4,4,5]
+# Handle errors:
+for item in list1:
+    try:
+        # process item
+        print(item)
+    except Exception as e:
+        print("ERROR", e)
+
+
+---
+
+Round 2 Q&A
+
+1. DMSP tool discussion
+
+Deep dive into tool architecture, your contribution, tech stack, challenges & solutions.
+
+
+2. Docker & Containerization
+
+Same as Round 1, can expand with orchestration (docker-compose, Kubernetes).
+
+
+3. Smallest substring containing all letters
+
+Already covered above.
+
+
+4. Candidate questions
+
+Ask about team structure, deployment frequency, tech stack, monitoring/observability practices.
+
+
+
+---
+
+
+
+---
+
+Docker Commands
+
+docker ps – Lists running containers. Add -a to see all containers.
+
+docker images – Shows all local images.
+
+docker build – Builds an image from a Dockerfile. Example: docker build -t myimage .
+
+docker run – Starts a container from an image. Example: docker run -it myimage /bin/bash
+
+docker exec – Runs a command inside a running container. Example: docker exec -it container_id bash
+
+docker logs – Shows logs from a container. Example: docker logs container_id
+
+docker-compose up – Starts all services defined in a docker-compose.yml file.
+
+
+
+---
+
+Linux OS Patching
+
+Patching is updating your system to fix security vulnerabilities, bugs, or improve performance.
+
+Ubuntu/Debian:
+
+
+sudo apt update          # Refresh package lists
+sudo apt upgrade         # Apply available updates
+sudo reboot              # Reboot if kernel or critical update applied
+
+RHEL/CentOS:
+
+
+sudo yum update          # Updates all packages
+sudo reboot              # If required
+
+Tips:
+
+Always check patch logs: /var/log/yum.log or /var/log/apt/history.log.
+
+Schedule patches during maintenance windows to avoid downtime.
+
+For critical security updates only: apt-get upgrade --only-upgrade package_name or yum update package_name.
+
+
+
+---
+
+If you want, I can also give a ready-to-memorize “interview one-liner version” for Docker + Linux patching so it’s super quick to recall under pressure.
+
+Do you want me to do that?
